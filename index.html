@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="完成八道电影审美选择题，找到与你灵魂同频的电影。">
+<meta name="theme-color" content="#1a1715">
+<meta property="og:title" content="光影人格 · 你与哪部电影同频">
+<meta property="og:description" content="八道题，二十四种选择，一部与你灵魂同频的电影。">
+<meta property="og:type" content="website">
+<title>光影人格 · 你与哪部电影同频</title>
+<style>
+  @import url('https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Ma+Shan+Zheng&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #1a1715;
+    --bg-2: #25201c;
+    --ink: #e8ddd0;
+    --ink-soft: #b8a998;
+    --accent: #c9a76c;
+    --accent-2: #8a6a3f;
+    --line: rgba(201, 167, 108, 0.2);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(201,167,108,0.08) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(138,106,63,0.08) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(232,221,208,0.015) 2px, rgba(232,221,208,0.015) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .screen {
+    width: 100%;
+    max-width: 680px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hidden { display: none !important; }
+
+  /* ───────── START ───────── */
+  .start-wrap {
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .start-eyebrow {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 14px;
+    letter-spacing: 0.5em;
+    color: var(--accent);
+    margin-bottom: 32px;
+    padding-left: 0.5em;
+  }
+
+  .start-title {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: clamp(42px, 8vw, 68px);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 16px;
+    letter-spacing: 0.08em;
+  }
+
+  .start-title .accent {
+    color: var(--accent);
+  }
+
+  .start-sub {
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 2;
+    margin: 36px 0 56px;
+    letter-spacing: 0.1em;
+  }
+
+  .start-sub .sep {
+    display: inline-block;
+    margin: 0 14px;
+    color: var(--accent);
+    opacity: 0.6;
+  }
+
+  .film-strip {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 48px 0;
+  }
+
+  .film-strip span {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    opacity: 0.3;
+    border-radius: 1px;
+  }
+  .film-strip span:nth-child(odd)  { height: 20px; }
+  .film-strip span:nth-child(even) { align-self: center; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 44px;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--accent);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    letter-spacing: 0.3em;
+    padding-left: calc(44px + 0.3em);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-101%);
+    transition: transform 0.4s ease;
+    z-index: -1;
+  }
+
+  .btn:hover {
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .btn:hover::before {
+    transform: translateX(0);
+  }
+
+  .btn:focus-visible,
+  .option:focus-visible,
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  .btn .arrow {
+    font-size: 18px;
+    color: var(--accent);
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .btn:hover .arrow { color: var(--bg); transform: translateX(4px); }
+
+  .start-hint {
+    margin-top: 64px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.3em;
+    opacity: 0.5;
+  }
+
+  /* ───────── QUIZ ───────── */
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+    padding-top: 8px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+    position: relative;
+    margin: 0 24px;
+  }
+
+  .progress-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--accent);
+    transition: width 0.5s ease;
+  }
+
+  .progress-num {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 18px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    min-width: 60px;
+  }
+  .progress-num.right { text-align: right; }
+
+  .q-wrap {
+    padding: 20px 0 10px;
+  }
+
+  .q-eyebrow {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.4em;
+    margin-bottom: 24px;
+    padding-left: 0.4em;
+    opacity: 0.8;
+  }
+
+  .q-text {
+    font-size: clamp(22px, 4vw, 30px);
+    line-height: 1.9;
+    font-weight: 400;
+    margin-bottom: 52px;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+  }
+
+  .q-text .quote-mark {
+    color: var(--accent);
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 1.2em;
+    opacity: 0.6;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 22px 28px 22px 64px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.35s ease;
+  }
+
+  .option .opt-label {
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 20px;
+    color: var(--accent);
+    opacity: 0.7;
+    transition: all 0.35s ease;
+  }
+
+  .option:hover {
+    border-color: var(--accent);
+    background: rgba(201, 167, 108, 0.04);
+    transform: translateX(4px);
+  }
+  .option:hover .opt-label {
+    opacity: 1;
+    color: var(--ink);
+  }
+
+  .option.selected {
+    border-color: var(--accent);
+    background: rgba(201, 167, 108, 0.08);
+  }
+  .option.selected .opt-label {
+    opacity: 1;
+    color: var(--ink);
+  }
+
+  .nav-row {
+    margin-top: 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border: none;
+    color: var(--ink-soft);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    letter-spacing: 0.25em;
+    padding: 12px 8px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  .btn-ghost:hover { color: var(--accent); }
+  .btn-ghost:disabled { opacity: 0.25; cursor: not-allowed; }
+  .btn-ghost:disabled:hover { color: var(--ink-soft); }
+
+  .btn-next {
+    padding: 12px 32px 12px calc(32px + 0.25em);
+    font-size: 14px;
+    letter-spacing: 0.25em;
+  }
+
+  /* ───────── RESULT ───────── */
+  .result-eyebrow {
+    text-align: center;
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.5em;
+    padding-left: 0.5em;
+    margin-bottom: 40px;
+    opacity: 0.8;
+  }
+
+  .result-card {
+    border: 1px solid var(--line);
+    padding: 56px 48px 48px;
+    background: linear-gradient(180deg, rgba(201,167,108,0.02) 0%, transparent 100%);
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  .result-card::before,
+  .result-card::after {
+    content: '';
+    position: absolute;
+    width: 40px; height: 40px;
+    border: 1px solid var(--accent);
+    opacity: 0.5;
+  }
+  .result-card::before { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+  .result-card::after  { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+
+  .director-label {
+    font-size: 12px;
+    letter-spacing: 0.4em;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+    padding-left: 0.4em;
+  }
+
+  .director-name {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: clamp(36px, 7vw, 56px);
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .film-name {
+    font-size: clamp(20px, 3.5vw, 28px);
+    color: var(--ink);
+    margin-bottom: 32px;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+  }
+
+  .film-name .year {
+    font-size: 0.6em;
+    color: var(--ink-soft);
+    margin-left: 12px;
+    font-weight: 300;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+    margin: 0 auto 32px;
+  }
+
+  .quote {
+    font-size: 17px;
+    line-height: 2.1;
+    color: var(--ink);
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 36px;
+    letter-spacing: 0.06em;
+    position: relative;
+    padding: 0 20px;
+  }
+  .quote::before {
+    content: '「';
+    position: absolute;
+    left: -4px;
+    top: -8px;
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 28px;
+    color: var(--accent);
+    opacity: 0.5;
+    font-style: normal;
+  }
+  .quote::after {
+    content: '」';
+    position: absolute;
+    right: -4px;
+    bottom: -8px;
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 28px;
+    color: var(--accent);
+    opacity: 0.5;
+    font-style: normal;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .tag {
+    padding: 6px 16px;
+    border: 1px solid var(--line);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--ink-soft);
+    background: rgba(201,167,108,0.02);
+  }
+
+  .section-title {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 20px;
+    color: var(--accent);
+    margin: 36px 0 20px;
+    letter-spacing: 0.2em;
+    padding-left: 0.2em;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 20px;
+    background: var(--accent);
+    opacity: 0.7;
+  }
+
+  .analysis-text {
+    font-size: 15px;
+    line-height: 2.1;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    margin-bottom: 24px;
+  }
+  .analysis-text strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .reason-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 8px;
+  }
+  .reason-list li {
+    padding: 14px 0 14px 32px;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+    letter-spacing: 0.03em;
+    position: relative;
+  }
+  .reason-list li:last-child { border-bottom: none; }
+  .reason-list li::before {
+    content: '◇';
+    position: absolute;
+    left: 6px;
+    top: 14px;
+    color: var(--accent);
+    font-size: 12px;
+    opacity: 0.8;
+  }
+  .reason-list li strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .retake-wrap {
+    text-align: center;
+    padding: 32px 0 20px;
+  }
+
+  @media (max-width: 520px) {
+    .result-card { padding: 40px 24px 32px; }
+    .q-text { margin-bottom: 36px; }
+    .option { padding: 18px 20px 18px 52px; font-size: 15px; }
+    .option .opt-label { left: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ═══════════ START ═══════════ -->
+  <div id="screen-start" class="screen">
+    <div class="start-wrap">
+      <div class="start-eyebrow">光影人格测试</div>
+      <h1 class="start-title">你与哪部电影<br><span class="accent">灵魂同频</span></h1>
+      <div class="film-strip">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="start-sub">
+        八道题 <span class="sep">·</span> 二十四种选择 <span class="sep">·</span> 一部你的电影
+      </p>
+      <button class="btn" onclick="startQuiz()">
+        开始放映 <span class="arrow">→</span>
+      </button>
+      <p class="start-hint">请凭直觉作答 ／ 无对错之分</p>
+    </div>
+  </div>
+
+  <!-- ═══════════ QUIZ ═══════════ -->
+  <div id="screen-quiz" class="screen hidden">
+    <div class="quiz-header">
+      <div class="progress-num" id="pNum">01</div>
+      <div class="progress-track"><div class="progress-bar" id="pBar" style="width:0%"></div></div>
+      <div class="progress-num right">08</div>
+    </div>
+
+    <div class="q-wrap">
+      <div class="q-eyebrow" id="qEyebrow">第 一 幕</div>
+      <h2 class="q-text" id="qText"></h2>
+      <div class="options" id="optBox"></div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-ghost" id="prevBtn" onclick="prevQ()" disabled>← 上一题</button>
+      <button class="btn btn-next" id="nextBtn" onclick="nextQ()">
+        下一题 <span class="arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════ RESULT ═══════════ -->
+  <div id="screen-result" class="screen hidden">
+    <div class="result-eyebrow">· 你 的 影 像 答 案 ·</div>
+
+    <div class="result-card">
+      <div class="director-label">D I R E C T O R</div>
+      <div class="director-name" id="rDirector"></div>
+      <h3 class="film-name"><span id="rFilm"></span><span class="year" id="rYear"></span></h3>
+
+      <div class="divider"></div>
+      <div class="quote" id="rQuote"></div>
+
+      <div class="tags" id="rTags"></div>
+
+      <div class="section-title">风 格 解 析</div>
+      <div class="analysis-text" id="rAnalysis"></div>
+
+      <div class="section-title">为 什 么 是 它</div>
+      <ul class="reason-list" id="rReasons"></ul>
+    </div>
+
+    <div class="retake-wrap">
+      <button class="btn" onclick="retake()">
+        再 测 一 次 <span class="arrow">↻</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   问题库 · 每个选项对应维度得分
+   维度: 【慢/静】【冷/疏离】【暖/治愈】【荒诞/黑色】
+        【奇/魔幻】【暴/激烈】【诗/意象】【悬/思辨】
+   ══════════════════════════════════════════════════ */
+const questions = [
+  {
+    eyebrow: "第 一 幕",
+    q: "如果人生是一场电影，你希望它的开场是：",
+    opts: [
+      { t: "空镜头：清晨的街道，雾气未散，只有扫地声", s: {慢:3,诗:2,暖:1} },
+      { t: "近景：一双鞋匆匆踏过积水，远处传来警笛", s: {暴:2,悬:3,冷:1} },
+      { t: "长镜头：一场荒诞的婚礼，所有人都在笑着哭", s: {荒诞:3,暖:1,奇:1} }
+    ]
+  },
+  {
+    eyebrow: "第 二 幕",
+    q: "你最喜欢的电影色调是：",
+    opts: [
+      { t: "褪了色的暖黄，像老照片那样温柔", s: {暖:3,诗:2,慢:1} },
+      { t: "清冷的蓝与灰，雨夜里霓虹灯的倒影", s: {冷:3,悬:2,诗:1} },
+      { t: "浓烈的撞色，红的血、绿的草、艳的裙", s: {暴:2,奇:2,荒诞:2} }
+    ]
+  },
+  {
+    eyebrow: "第 三 幕",
+    q: "走进一家深夜食堂，你点了：",
+    opts: [
+      { t: "一碗热汤面，老板娘不问来处", s: {暖:3,慢:2,诗:1} },
+      { t: "一杯威士忌，坐在角落观察每一个人", s: {冷:2,悬:3,荒诞:1} },
+      { t: "什么都不点，只来抽根烟，然后消失在巷口", s: {冷:2,暴:1,诗:2,悬:1} }
+    ]
+  },
+  {
+    eyebrow: "第 四 幕",
+    q: "你更喜欢的叙事节奏是：",
+    opts: [
+      { t: "慢，像日子在一页页翻，什么都不说但什么都在", s: {慢:3,诗:3,暖:1} },
+      { t: "跳跃，时空交错，像回忆和现实在打架", s: {悬:2,奇:2,冷:1,诗:1} },
+      { t: "一路狂奔，不知道下一秒会发生什么", s: {暴:3,悬:2,荒诞:1} }
+    ]
+  },
+  {
+    eyebrow: "第 五 幕",
+    q: "故事的结尾，你希望那个人：",
+    opts: [
+      { t: "回到了家，桌上的灯还亮着", s: {暖:3,慢:2,诗:1} },
+      { t: "独自上路，消失在公路的尽头", s: {冷:3,诗:2,慢:1} },
+      { t: "笑着死去，在最灿烂的一瞬间", s: {暴:2,荒诞:2,奇:2,诗:1} }
+    ]
+  },
+  {
+    eyebrow: "第 六 幕",
+    q: "如果要选一件道具贯穿全片：",
+    opts: [
+      { t: "一本写满了字的旧日记本", s: {诗:3,慢:2,暖:1} },
+      { t: "一把没装子弹的手枪", s: {悬:2,暴:2,荒诞:2,冷:1} },
+      { t: "一罐过期的凤梨罐头", s: {荒诞:3,暖:1,诗:2,冷:1} }
+    ]
+  },
+  {
+    eyebrow: "第 七 幕",
+    q: "你最想经历的一场戏：",
+    opts: [
+      { t: "在田野里奔跑，风穿过耳朵，没有人说话", s: {诗:3,暖:2,慢:2} },
+      { t: "雨夜的复仇，刀与伞，分不清雨和血", s: {暴:3,冷:2,悬:2} },
+      { t: "一场永远停不下来的梦，梦里全是从前的人", s: {奇:3,诗:2,暖:1,冷:1} }
+    ]
+  },
+  {
+    eyebrow: "第 八 幕",
+    q: "散场灯亮时，你希望观众心里留下的是：",
+    opts: [
+      { t: "淡淡的温柔，想给家里打个电话", s: {暖:3,诗:2,慢:2} },
+      { t: "深深的沉默，很久说不出一句话", s: {冷:3,诗:2,悬:1,慢:1} },
+      { t: "心跳加速，想在大街上狂奔一圈", s: {暴:2,荒诞:2,悬:2,奇:1} }
+    ]
+  }
+];
+
+/* ══════════════════════════════════════════════════
+   结果库 · 豆瓣TOP250 + 园子温等小众导演
+   ══════════════════════════════════════════════════ */
+const results = [
+  {
+    director: "是枝裕和", film: "海街日记", year: "2015",
+    tags: ["#日常美学", "#家庭温情", "#日式治愈", "#四季流转"],
+    profile: {慢:8,诗:5,暖:9,冷:0,荒诞:0,奇:0,暴:0,悬:0},
+    quote: "夏天才刚刚开始呢。",
+    analysis: "是枝裕和的镜头里，没有惊天动地的大事，只有厨房里碗筷的碰撞、屋檐下晾晒的衣服、梅子酒在罐子里悄悄发酵。他让你相信，最动人的电影不在远方，就在一饭一蔬之间。",
+    reasons: [
+      "<strong>慢节奏偏好</strong>：你对日常细节的敏感，与是枝裕和用长镜头捕捉生活褶皱的方式完全同频。",
+      "<strong>家庭温度</strong>：你渴望温暖结局的倾向，与《海街日记》中四姐妹互相依偎的内核完美契合。",
+      "<strong>季节美学</strong>：你对自然与静谧的偏爱，正对应影片中樱花、蝉鸣、落叶、初雪的四季流转结构。",
+      "<strong>留白美学</strong>：你不爱激烈表达，与是枝裕和'不把话说透'的东方叙事哲学异曲同工。"
+    ]
+  },
+  {
+    director: "杨德昌", film: "一一", year: "2000",
+    tags: ["#都市寓言", "#生命切片", "#理性诗意", "#台北往事"],
+    profile: {慢:7,诗:6,暖:2,冷:6,荒诞:1,奇:0,暴:0,悬:3},
+    quote: "电影发明了之后，人类的生命比起以前延长了至少三倍。",
+    analysis: "杨德昌用近三个小时，拍了一个普通台北家庭的春夏秋冬。他不煽情，不喊口号，只用冷静到近乎残酷的镜头，告诉你：每个人都只能看见一半的世界。",
+    reasons: [
+      "<strong>冷静观察</strong>：你偏爱疏离视角，与杨德昌站在人群之外看世界的方式高度一致。",
+      "<strong>思辨气质</strong>：你对叙事跳跃和哲学留白的偏好，正契合《一一》中洋洋举起相机拍人后脑勺的隐喻。",
+      "<strong>都市疏离</strong>：深夜食堂选择独坐角落，对应影片中人到中年的NJ在 Tokyo 街头的孤独。",
+      "<strong>结尾留白</strong>：你希望散场后留下沉默——这正是《一一》结尾洋洋念完悼词后，观众最长的那一次呼吸。"
+    ]
+  },
+  {
+    director: "王家卫", film: "重庆森林", year: "1994",
+    tags: ["#都市孤独", "#时间胶囊", "#手持晃荡", "#港风迷离"],
+    profile: {慢:4,诗:7,暖:4,冷:5,荒诞:4,奇:0,暴:0,悬:2},
+    quote: "不知道从什么时候开始，在每个东西上面都有一个日子。",
+    analysis: "王家卫的电影是一种情绪：晃动的手持镜头、霓虹灯下的慢快门、被放大的孤独。你不需要看懂剧情，你只需要感受那种'擦肩而过'的都市诗意。",
+    reasons: [
+      "<strong>凤梨罐头综合症</strong>：你选择了过期凤梨罐头作为贯穿道具——这几乎就是《重庆森林》的灵魂图腾。",
+      "<strong>都市疏离美学</strong>：你对蓝灰霓虹灯色调的偏爱，正是影片中警察663和女杀手相遇的那片夜色。",
+      "<strong>独白式叙事</strong>：你喜欢跳跃叙事，对应王家卫用旁白代替对白、用碎片代替完整的表达方式。",
+      "<strong>温柔的荒诞</strong>：你笑中带泪的婚礼开场倾向，与影片中金发女杀手的荒诞逃亡、肥皂毛巾的人格化高度契合。"
+    ]
+  },
+  {
+    director: "侯孝贤", film: "悲情城市", year: "1989",
+    tags: ["#历史静默", "#长镜头诗", "#家国乡愁", "#东方留白"],
+    profile: {慢:9,诗:9,暖:2,冷:4,荒诞:0,奇:0,暴:2,悬:1},
+    quote: "这里群山环绕，只有一条路通出去。",
+    analysis: "侯孝贤的镜头永远是远的——远远地看着那一家人吃饭、吵架、离散，就像看一整个时代流过。他的静不是空，是把万语千言都压在沉默底下。",
+    reasons: [
+      "<strong>极致慢美学</strong>：你对慢节奏的极致追求，对应侯孝贤一个长镜头可以持续几分钟的电影语法。",
+      "<strong>田园诗倾向</strong>：田野奔跑的选择，与《悲情城市》中金瓜石山区的青山云海镜头语言同源。",
+      "<strong>沉默即语言</strong>：你偏好留白不言说，与影片中林文清用写字代替说话的设计如出一辙。",
+      "<strong>散场沉默</strong>：你希望灯光亮起时观众沉默——这正是每一个走出《悲情城市》放映厅的人的真实状态。"
+    ]
+  },
+  {
+    director: "园子温", film: "庸才", year: "2011",
+    tags: ["#黑色残酷", "#青春废墟", "#反主流诗意", "#暴力美学"],
+    profile: {慢:2,诗:4,暖:1,冷:4,荒诞:6,奇:3,暴:8,悬:3},
+    quote: "我是一个随波逐流的人，这就是我生存的方式。",
+    analysis: "园子温是日本电影的'坏孩子'——他用最脏的画面讲最真的话，用最极端的暴力刺最软的心。《庸才》是大地震之后的东京废墟，是少年在泥沼里拼命开出的一朵黑花。",
+    reasons: [
+      "<strong>极端暴力美学</strong>：你对雨夜复仇、雨伞血影的场景选择，直接命中园子温标志性的暴力诗学。",
+      "<strong>荒诞黑色幽默</strong>：你对笑着死去结尾的偏好，正是园子温电影中'以笑写悲'的核心手法。",
+      "<strong>反主流审美</strong>：你选择浓烈撞色（血/草/裙），对应《庸才》中废墟之上的异色构图。",
+      "<strong>边缘人格共鸣</strong>：你不爱寻常叙事，偏爱'反'的力量——这正是园子温区别于所有温情派导演的精神内核。"
+    ]
+  },
+  {
+    director: "今敏", film: "千年女优", year: "2001",
+    tags: ["#梦境织体", "#时空折叠", "#视觉交响", "#追寻母题"],
+    profile: {慢:2,诗:8,暖:4,冷:2,荒诞:1,奇:8,暴:0,悬:5},
+    quote: "我喜欢追寻那个人的自己。",
+    analysis: "今敏是动画界的魔术师——他让现实与梦境、记忆与电影在同一个镜头里无缝切换。《千年女优》是一场跨越千年的追寻，你分不清哪里是戏，哪里才是真实的人生。",
+    reasons: [
+      "<strong>时空跳跃偏好</strong>：你选择交织回忆与现实的叙事节奏，正是今敏电影最核心的剪辑语言。",
+      "<strong>梦境气质</strong>：你想经历一场永不停歇的梦，对应《千年女优》中千代子穿越各个时代的奇幻旅程。",
+      "<strong>追寻母题</strong>：你选择独自上路的结局，与千代子用一生去追一个人的主题完全呼应。",
+      "<strong>视觉诗意</strong>：你对浓烈与奇幻的倾向，匹配今敏用华美画面承载纯粹情感的动画美学。"
+    ]
+  },
+  {
+    director: "朴赞郁", film: "老男孩", year: "2003",
+    tags: ["#复仇迷宫", "#哥特美学", "#黑色寓言", "#长镜头暴力"],
+    profile: {慢:3,诗:5,暖:0,冷:6,荒诞:3,奇:4,暴:9,悬:8},
+    quote: "纵使我是禽兽，难道我没有资格活下去吗？",
+    analysis: "朴赞郁的复仇三部曲把韩国电影的狠推到了极致。《老男孩》不是在讲复仇，是在讲'命运是什么东西'——华丽的构图、对称的镜头，包裹着一个让人不敢看第二遍的秘密。",
+    reasons: [
+      "<strong>悬疑倾向满格</strong>：你偏爱雨夜警笛开场，这正是朴赞郁电影的招牌式入戏手法。",
+      "<strong>极致复仇叙事</strong>：你选择雨夜复仇场景，直接命中《老男孩》走廊长镜头那场戏的暴力诗学。",
+      "<strong>黑暗寓言气质</strong>：你选择'笑着死去'的极端结局，对应朴赞郁用极端情境拷问人性的创作哲学。",
+      "<strong>形式感执念</strong>：你对撞色和道具（无子弹手枪）的敏感，契合朴赞郁近乎偏执的视觉对称美学。"
+    ]
+  },
+  {
+    director: "宫崎骏", film: "千与千寻", year: "2001",
+    tags: ["#少女成长", "#神隐世界", "#万物有灵", "#环保乡愁"],
+    profile: {慢:5,诗:6,暖:8,冷:0,荒诞:0,奇:9,暴:0,悬:0},
+    quote: "不能吃太胖哦，会被杀掉的！",
+    analysis: "宫崎骏创造了一个我们都想走进去的世界——那里有汤屋的红灯笼、海上的列车、温柔的无脸男。他从不给孩子'简化'世界，他把成年人的欲望和困惑，包在魔法的糖衣里讲给你听。",
+    reasons: [
+      "<strong>奇幻世界观</strong>：你对魔幻梦境和永不停歇之旅的偏好，直接对应宫崎骏的神隐世界想象力。",
+      "<strong>温暖底色</strong>：你追求最终回归温暖的倾向，与千寻找回名字、回到现实的结构内在一致。",
+      "<strong>万物有灵审美</strong>：你对自然田野场景的选择，契合宫崎骏作品中自然崇拜、万物皆有灵魂的设定。",
+      "<strong>成长母题</strong>：你选择日记道具（记载心路），与千寻从胆小少女到独当一面的成长弧线同构。"
+    ]
+  },
+  {
+    director: "克里斯托弗·诺兰", film: "盗梦空间", year: "2010",
+    tags: ["#梦境迷宫", "#时间折叠", "#烧脑叙事", "#情感内核"],
+    profile: {慢:1,诗:3,暖:2,冷:3,荒诞:0,奇:7,暴:3,悬:9},
+    quote: "我们都知道现实不是真实的，但你总要选一个来活。",
+    analysis: "诺兰是把哲学和爆米花结合得最好的导演。《盗梦空间》一层梦境套一层，陀螺停下了没有？也许答案不重要——重要的是你愿意相信什么。",
+    reasons: [
+      "<strong>极致思辨欲</strong>：你偏爱跳跃交织的叙事，正是诺兰式多层叙事结构最忠实的受众。",
+      "<strong>悬疑导向</strong>：你对警笛雨夜、未解之谜的开场偏好，匹配诺兰从第一帧就不松手的悬念设置。",
+      "<strong>陀螺型人格</strong>：你选择'分不清梦与现实'的梦境体验，对应影片核心命题——现实与梦境的边界。",
+      "<strong>狂奔能量</strong>：你希望散场后心跳加速，这正是《盗梦空间》零重力打斗后你真实的生理反应。"
+    ]
+  },
+  {
+    director: "斯坦利·库布里克", film: "2001太空漫游", year: "1968",
+    tags: ["#宇宙哲思", "#极简叙事", "#视觉奇观", "#人类寓言"],
+    profile: {慢:6,诗:7,暖:0,冷:9,荒诞:1,奇:7,暴:2,悬:6},
+    quote: "I'm sorry, Dave. I'm afraid I can't do that.",
+    analysis: "库布里克用一块黑色石碑，连起了人类的过去、现在和未来。五十年过去了，没有任何一部科幻片能在'哲思重量'这四个字上，和《2001》并驾齐驱。",
+    reasons: [
+      "<strong>绝对冷静</strong>：你的冷/疏离维度倾向极高，正匹配库布里克像上帝一样俯瞰人类的摄影机位置。",
+      "<strong>宇宙级诗意</strong>：你对长镜头和静默美学的偏好，与影片中小行星华尔兹、哈尔被拔记忆的慢镜头同调。",
+      "<strong>思辨型结尾</strong>：你希望散场后留下深深的沉默——这正是所有看完星门段落的观众共有的症状。",
+      "<strong>反人类中心</strong>：你不爱温暖煽情，偏爱冷峻寓言——这就是库布里克花四年做一部科幻片的全部理由。"
+    ]
+  },
+  {
+    director: "韦斯·安德森", film: "布达佩斯大饭店", year: "2014",
+    tags: ["#对称狂魔", "#马卡龙美学", "#荒诞童话", "#怀旧乡愁"],
+    profile: {慢:4,诗:5,暖:6,冷:1,荒诞:7,奇:4,暴:1,悬:1},
+    quote: "在野蛮的屠宰场上，还是有些文明的微光存在，这就是人性。",
+    analysis: "韦斯·安德森的每一帧都可以截下来当明信片。他用最甜的马卡龙色，讲一个关于战争、流亡和失去的故事——甜的糖衣底下，是苦到骨子里的乡愁。",
+    reasons: [
+      "<strong>荒诞温柔配比</strong>：你选择'笑着哭的婚礼'开场，正是安德森式荒诞温柔的精准定义。",
+      "<strong>形式美学信徒</strong>：你对色调和道具的敏感度，对应韦斯·安德森从构图到配色都强迫症式的视觉掌控。",
+      "<strong>童话糖衣现实</strong>：你选择凤梨罐头这种'过期意象'道具，与《布达佩斯》用怀旧包装残酷现实的手法一致。",
+      "<strong>幽默的温度</strong>：你偏好在荒诞中保留暖的底色，正契合M.古斯塔夫先生即使入狱也不忘喷香水的灵魂。"
+    ]
+  },
+  {
+    director: "丹尼斯·维伦纽瓦", film: "银翼杀手2049", year: "2017",
+    tags: ["#赛博诗学", "#存在追问", "#极致氛围", "#沉默美学"],
+    profile: {慢:7,诗:8,暖:1,冷:8,荒诞:0,奇:6,暴:2,悬:5},
+    quote: "有时候，如果爱上一个人，即使他不是真的，也没关系。",
+    analysis: "维伦纽瓦是当代最会拍'氛围'的导演。他让你在沙尘弥漫的洛杉矶、在雪花纷飞的废墟里，慢慢思考一个问题：一个复制人，有没有资格拥有灵魂？",
+    reasons: [
+      "<strong>冷调诗学</strong>：你对清冷蓝灰色调+慢节奏的组合选择，正是维伦纽瓦标志性的影像风格。",
+      "<strong>存在主义倾向</strong>：你选择'深深沉默'的散场感受，对应影片中K发现自己不是天选之子时的那一整段静默。",
+      "<strong>赛博诗意</strong>：你选择梦境/现实交织的叙事，与复制人记忆到底是植入还是真实的核心命题同构。",
+      "<strong>视觉禁欲主义</strong>：你不喜欢过度激烈，但偏爱震撼——2049里海上钢琴师式的搏斗和漫天黄沙的海滩，就是这种美学的极致。"
+    ]
+  },
+  {
+    director: "北野武", film: "花火", year: "1997",
+    tags: ["#暴力柔情", "#日式物哀", "#沉默暴徒", "#死亡美学"],
+    profile: {慢:5,诗:6,暖:3,冷:6,荒诞:2,奇:0,暴:7,悬:2},
+    quote: "你说这个世界是黑色的，我告诉你，是蓝色的。",
+    analysis: "北野武的电影里，男人不说话，爱一个人就带她去看海。拳头挥出去是硬的，樱花落下来是软的。《花火》最狠的地方在于——它让你相信，死可以是最温柔的告别。",
+    reasons: [
+      "<strong>暴柔二元性</strong>：你同时倾向暴力场景和静默美学，这正是北野武'暴力+柔情'的核心人格。",
+      "<strong>物哀气质</strong>：你选择'笑着死去在最灿烂时'的结局，对应影片结尾海边两声枪响与樱花并置的美学。",
+      "<strong>沉默男人</strong>：你选择深夜食堂'什么都不点，只抽根烟就走'，这就是北野武式男主的标准出场。",
+      "<strong>蓝与血</strong>：你选择浓烈撞色+冷调混合，对应《花火》蓝色海水与红色血液的标志性配色。"
+    ]
+  },
+  {
+    director: "安德烈·塔可夫斯基", film: "乡愁", year: "1983",
+    tags: ["#圣像影像", "#水与火诗", "#时间雕刻", "#精神乡愁"],
+    profile: {慢:9,诗:9,暖:2,冷:5,荒诞:0,奇:2,暴:0,悬:2},
+    quote: "人是脆弱的，这是他最伟大的地方。",
+    analysis: "塔可夫斯基拍的不是电影，是祈祷。一滴雨落下的时间、一条狗走过废墟的时间、一根蜡烛从点燃到熄灭的时间——他把时间揉成雕塑，放在你面前，让你学会慢下来。",
+    reasons: [
+      "<strong>极致慢+极致诗</strong>：你在这两个维度的得分非常高，塔可夫斯基就是为你而生的导演。",
+      "<strong>乡愁母题</strong>：你选择旧日记本作为道具，对应《乡愁》中诗人在异国永远无法抵达的精神原乡。",
+      "<strong>水滴中的宇宙</strong>：你偏爱田野奔跑和空镜头开场，匹配塔可夫斯基水、火、雾、田野的自然元素崇拜。",
+      "<strong>电影即信仰</strong>：你希望散场后留下的不是情绪而是存在——这正是塔可夫斯基所有电影的终极追求。"
+    ]
+  },
+  {
+    director: "伍迪·艾伦", film: "午夜巴黎", year: "2011",
+    tags: ["#知识分子浪漫", "#时光机喜剧", "#巴黎情书", "#怀旧哲思"],
+    profile: {慢:5,诗:5,暖:5,冷:1,荒诞:5,奇:3,暴:0,悬:1},
+    quote: "我们都想要活在别的时代，因为现在总是让人有点失望。",
+    analysis: "伍迪·艾伦一辈子都在拍'一个焦虑的知识分子爱上了一个不该爱的女人或时代'。《午夜巴黎》是他写给巴黎的情书，也是写给所有'觉得自己生错了时代'的人的一剂温柔解药。",
+    reasons: [
+      "<strong>知识分子型荒诞</strong>：你偏好'笑着哭'的荒诞婚礼开场，正是伍迪式都市中产焦虑幽默的标准基调。",
+      "<strong>怀旧浪漫主义</strong>：你选择旧日记本、梦境旅行的倾向，对应男主每晚穿越回黄金年代的核心设定。",
+      "<strong>暖色调审美</strong>：你偏爱暖黄褪色质感，与影片中巴黎夜晚的金色灯光、暖色胶片感完全一致。",
+      "<strong>文学性优先</strong>：你不急不缓的节奏偏好，契合伍迪·艾伦用大段对白和文学梗推进电影的反常规做法。"
+    ]
+  },
+  {
+    director: "科恩兄弟", film: "老无所依", year: "2007",
+    tags: ["#黑色西部", "#存在荒诞", "#冷面杀手", "#宿命论"],
+    profile: {慢:5,诗:3,暖:0,冷:7,荒诞:6,奇:0,暴:6,悬:6},
+    quote: "你无法阻止即将到来的事，因为那不是你能控制的。",
+    analysis: "科恩兄弟的电影里，世界是荒谬的，好人不一定有好报，杀手不一定被抓住，所有的逻辑都会被一个拎着气枪的蘑菇头男人轻易打破。",
+    reasons: [
+      "<strong>荒诞+冷酷双高</strong>：你在这两个维度的组合非常独特，这正是科恩兄弟电影识别度的核心。",
+      "<strong>无子弹手枪</strong>：你选择了这一道具——简直就是安东·奇格尔那把高压气瓶枪的兄弟款，完全是科恩式暴力符号学。",
+      "<strong>反高潮叙事</strong>：你不爱常规的爽感结局，对应影片中杀手消失、老警长独白退场的'反高潮'设计。",
+      "<strong>命运虚无感</strong>：你倾向'荒诞的婚礼'和'沉默的散场'，契合科恩兄弟对'努力没有用'这一命题的反复书写。"
+    ]
+  }
+];
+
+/* ══════════════════════════════════════════════════
+   状态
+   ══════════════════════════════════════════════════ */
+let current = 0;
+let answers = new Array(questions.length).fill(null); // 存 index 0/1/2
+
+/* ══════════════════════════════════════════════════
+   渲染问题
+   ══════════════════════════════════════════════════ */
+function renderQ() {
+  const q = questions[current];
+  document.getElementById('pNum').textContent = String(current+1).padStart(2,'0');
+  document.getElementById('pBar').style.width = ((current)/questions.length*100)+'%';
+  document.getElementById('qEyebrow').textContent = q.eyebrow;
+  document.getElementById('qText').innerHTML =
+    `<span class="quote-mark">「</span>${q.q}<span class="quote-mark">」</span>`;
+
+  const optBox = document.getElementById('optBox');
+  optBox.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    if (answers[current] === i) btn.classList.add('selected');
+    btn.innerHTML = `<span class="opt-label">${String.fromCharCode(65+i)}</span>${o.t}`;
+    btn.onclick = () => {
+      answers[current] = i;
+      document.querySelectorAll('.option').forEach(e=>e.classList.remove('selected'));
+      btn.classList.add('selected');
+    };
+    optBox.appendChild(btn);
+  });
+
+  document.getElementById('prevBtn').disabled = current === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.querySelector('.arrow').previousSibling.textContent =
+    current === questions.length - 1 ? '揭晓答案 ' : '下一题 ';
+}
+
+function startQuiz() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('screen-start').classList.add('hidden');
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  renderQ();
+}
+
+function nextQ() {
+  if (answers[current] === null) {
+    // 轻抖提示
+    const box = document.getElementById('optBox');
+    box.style.transition = 'none';
+    box.style.transform = 'translateX(-4px)';
+    requestAnimationFrame(()=>{
+      box.style.transition = 'transform 0.3s';
+      box.style.transform = '';
+    });
+    return;
+  }
+  if (current < questions.length - 1) {
+    current++;
+    renderQ();
+  } else {
+    showResult();
+  }
+}
+
+function prevQ() {
+  if (current > 0) { current--; renderQ(); }
+}
+
+/* ══════════════════════════════════════════════════
+   核心匹配算法
+   ══════════════════════════════════════════════════ */
+function computeScores() {
+  const sum = {慢:0,诗:0,暖:0,冷:0,荒诞:0,奇:0,暴:0,悬:0};
+  answers.forEach((ansIdx, i) => {
+    const s = questions[i].opts[ansIdx].s;
+    Object.keys(s).forEach(k => sum[k] += s[k]);
+  });
+  return sum;
+}
+
+function bestMatch(userScore) {
+  // 余弦相似度 + 惩罚缺失维度
+  let bestIdx = 0, bestScore = -Infinity;
+  results.forEach((r, i) => {
+    const p = r.profile;
+    let dot = 0, normU = 0, normR = 0;
+    Object.keys(userScore).forEach(k => {
+      const u = userScore[k] || 0;
+      const v = p[k] || 0;
+      dot += u * v;
+      normU += u * u;
+      normR += v * v;
+    });
+    const cos = normU === 0 || normR === 0 ? 0 : dot / (Math.sqrt(normU) * Math.sqrt(normR));
+    // 加权：让高维度的命中更重要
+    let weighted = cos;
+    const topUser = Object.entries(userScore).sort((a,b)=>b[1]-a[1]).slice(0,3).map(e=>e[0]);
+    topUser.forEach(k => {
+      if ((p[k]||0) >= 5) weighted += 0.05;
+    });
+    if (weighted > bestScore) { bestScore = weighted; bestIdx = i; }
+  });
+  return bestIdx;
+}
+
+function showResult() {
+  const userScore = computeScores();
+  const idx = bestMatch(userScore);
+  const r = results[idx];
+
+  document.getElementById('screen-quiz').classList.add('hidden');
+  const s = document.getElementById('screen-result');
+  s.classList.remove('hidden');
+
+  document.getElementById('rDirector').textContent = r.director;
+  document.getElementById('rFilm').textContent = r.film;
+  document.getElementById('rYear').textContent = '（' + r.year + '）';
+  document.getElementById('rQuote').textContent = r.quote;
+  document.getElementById('rAnalysis').textContent = r.analysis;
+
+  const tags = document.getElementById('rTags');
+  tags.innerHTML = '';
+  r.tags.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'tag';
+    span.textContent = t;
+    tags.appendChild(span);
+  });
+
+  const ul = document.getElementById('rReasons');
+  ul.innerHTML = '';
+  r.reasons.forEach(html => {
+    const li = document.createElement('li');
+    li.innerHTML = html;
+    ul.appendChild(li);
+  });
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function retake() {
+  startQuiz();
+}
+</script>
+</body>
+</html>
